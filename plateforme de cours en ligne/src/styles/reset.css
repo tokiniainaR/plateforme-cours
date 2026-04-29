@@ -1,0 +1,12 @@
+/* Reset CSS pour correspondre EXACTEMENT à votre design original */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  font-size: 16px; /* Force la taille de base */
+}
+
+/* Vos styles originaux doivent s'appliquer sans modification */

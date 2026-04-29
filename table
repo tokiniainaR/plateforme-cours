@@ -1,0 +1,99 @@
+Base de données - tables existantes
+
+1. users
+   - id INT AUTO_INCREMENT PRIMARY KEY
+   - nom VARCHAR(100) NOT NULL
+   - prenom VARCHAR(100) NOT NULL
+   - email VARCHAR(200) NOT NULL UNIQUE
+   - password VARCHAR(255) NOT NULL
+   - role ENUM('student','instructor','admin') NOT NULL DEFAULT 'student'
+   - telephone VARCHAR(50)
+   - ville VARCHAR(100)
+   - adresse VARCHAR(255)
+   - filiere VARCHAR(100)
+   - niveau VARCHAR(100)
+   - naissance DATE
+   - specialites TEXT
+   - etat ENUM('active','suspended','blocked') NOT NULL DEFAULT 'active'
+   - created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+2. filieres
+   - id INT AUTO_INCREMENT PRIMARY KEY
+   - name VARCHAR(150) NOT NULL UNIQUE
+   - description TEXT
+   - created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+3. courses
+   - id INT AUTO_INCREMENT PRIMARY KEY
+   - title VARCHAR(255) NOT NULL
+   - description TEXT
+   - filiere VARCHAR(100)
+   - filiere_id INT
+   - niveau VARCHAR(100)
+   - duree VARCHAR(50)
+   - videos INT DEFAULT 0
+   - etudiants INT DEFAULT 0
+   - formateur_id INT
+   - statut ENUM('pending','approved','rejected') NOT NULL DEFAULT 'approved'
+   - created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+   - FOREIGN KEY (formateur_id) REFERENCES users(id) ON DELETE SET NULL
+   - FOREIGN KEY (filiere_id) REFERENCES filieres(id) ON DELETE SET NULL
+
+4. enrollments
+   - id INT AUTO_INCREMENT PRIMARY KEY
+   - user_id INT NOT NULL
+   - course_id INT NOT NULL
+   - progress INT DEFAULT 0
+   - enrolled_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+   - UNIQUE KEY unique_enrollment (user_id, course_id)
+   - FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
+   - FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE CASCADE
+
+5. exams
+   - id INT AUTO_INCREMENT PRIMARY KEY
+   - course_id INT
+   - title VARCHAR(255) NOT NULL
+   - description TEXT
+   - duration VARCHAR(50)
+   - instructor_id INT
+   - published TINYINT(1) DEFAULT 1
+   - created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+   - FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE SET NULL
+   - FOREIGN KEY (instructor_id) REFERENCES users(id) ON DELETE SET NULL
+
+6. submissions
+   - id INT AUTO_INCREMENT PRIMARY KEY
+   - exam_id INT NOT NULL
+   - student_id INT NOT NULL
+   - answers JSON
+   - grade INT DEFAULT 0
+   - status ENUM('pending','graded') DEFAULT 'pending'
+   - created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+   - FOREIGN KEY (exam_id) REFERENCES exams(id) ON DELETE CASCADE
+   - FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE CASCADE
+
+7. questions
+   - id INT AUTO_INCREMENT PRIMARY KEY
+   - course_id INT
+   - student_id INT
+   - instructor_id INT
+   - content TEXT NOT NULL
+   - answer TEXT
+   - status ENUM('open','answered') DEFAULT 'open'
+   - created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+   - FOREIGN KEY (course_id) REFERENCES courses(id) ON DELETE SET NULL
+   - FOREIGN KEY (student_id) REFERENCES users(id) ON DELETE SET NULL
+   - FOREIGN KEY (instructor_id) REFERENCES users(id) ON DELETE SET NULL
+
+8. reports
+   - id INT AUTO_INCREMENT PRIMARY KEY
+   - user_id INT
+   - type VARCHAR(100)
+   - message TEXT
+   - status ENUM('open','resolved') DEFAULT 'open'
+   - created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+   - FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL
+
+Note:
+- Ce fichier doit être mis à jour chaque fois que le schéma évolue.
+- Les tables sont définies dans `backend/config/db.js`.

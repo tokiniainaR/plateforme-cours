@@ -1,0 +1,20 @@
+# Node modules
+node_modules/
+backend/node_modules/
+plateforme de cours en ligne/node_modules/
+
+# Fichiers d'environnement
+.env
+backend/.env
+plateforme de cours en ligne/.env
+
+# Dossier de build
+dist/
+build/
+
+# Vidéos et fichiers uploadés
+backend/uploads/
+
+# Fichiers système
+.DS_Store
+Thumbs.db
